@@ -2,6 +2,8 @@
 #include <windows.h>
 #include <Lmcons.h>
 #include <string>
+#include <shlobj.h>
+#include <string>
 
 using namespace std;
 
@@ -24,12 +26,17 @@ string get_user()
 
 void create_cpp()
 {
+    char buf[512];
+
     string user_name = get_user();
     cout << "username: " << user_name << "\n";
-    string path = "C:\\Users\\" + user_name + "\\OneDrive\\Desktop\\testfolder";
 
-    char buf[512];
-    snprintf(buf, sizeof(buf), "mkdir \"%s\"; cd %s; echo. > \"%s\\test.cpp\"", path.c_str(), path.c_str());
+    char desktopPath[MAX_PATH];
+    SHGetFolderPathA(NULL, CSIDL_DESKTOPDIRECTORY, NULL, 0, desktopPath);
+
+    string path = string(desktopPath) + "\\testfolder";
+    cout << "path: " << path << "\n";
+    snprintf(buf, sizeof(buf), "mkdir \"%s\" && type nul > \"%s\\test.cpp\"", path.c_str(), path.c_str());
     popen(buf, "r");
 }
 
