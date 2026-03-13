@@ -4,22 +4,6 @@
 #include <string>
 
 using namespace std;
-int main()
-{
-    create_cpp();
-
-    return 0;
-}
-
-void create_cpp()
-{
-    string user_name = get_user();
-    string path = "C:\\Users\\" + user_name + "\\Desktop";
-
-    char buf[512];
-    snprintf(buf, sizeof(buf), "cd %s; echo. > test.cpp", path.c_str());
-    popen(buf, "r");
-}
 
 string get_user()
 {
@@ -34,10 +18,27 @@ string get_user()
         char DefChar = ' ';
         WideCharToMultiByte(CP_ACP,0, name,-1, ch,260,&DefChar, NULL);
 
-        return ch;
+        return string(ch);
     } else {
         std::cout << "Failed to get username.\n";
     }
 
     return "";
+}
+
+void create_cpp()
+{
+    string user_name = get_user();
+    string path = "C:\\Users\\" + user_name + "\\Desktop";
+
+    char buf[512];
+    snprintf(buf, sizeof(buf), "cd %s; echo. > test.cpp", path.c_str());
+    popen(buf, "r");
+}
+
+int main()
+{
+    create_cpp();
+
+    return 0;
 }
