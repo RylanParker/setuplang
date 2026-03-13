@@ -7,17 +7,13 @@ using namespace std;
 
 string get_user()
 {
-    TCHAR name[UNLEN + 1];
-    DWORD size = UNLEN + 1;
+    wchar_t name[260];
+    DWORD size = 260;
 
-    // Get the username
-    if (GetUserName((TCHAR*)name, &size)) {
-        std::wcout << L"Hello, " << name << L"!\n"; 
-
+    if (GetUserNameW(name, &size)) {
         char ch[260];
         char DefChar = ' ';
-        WideCharToMultiByte(CP_ACP,0, name,-1, ch,260,&DefChar, NULL);
-
+        WideCharToMultiByte(CP_UTF8, 0, name, -1, ch, 260, NULL, NULL);
         return string(ch);
     } else {
         std::cout << "Failed to get username.\n";
@@ -29,10 +25,11 @@ string get_user()
 void create_cpp()
 {
     string user_name = get_user();
-    string path = "C:\\Users\\" + user_name + "\\Desktop";
+    cout << "username: " << user_name << "\n";
+    string path = "C:\\Users\\" + user_name + "\\OneDrive\\Desktop\\testfolder";
 
     char buf[512];
-    snprintf(buf, sizeof(buf), "cd %s; echo. > test.cpp", path.c_str());
+    snprintf(buf, sizeof(buf), "mkdir \"%s\"; cd %s; echo. > \"%s\\test.cpp\"", path.c_str(), path.c_str());
     popen(buf, "r");
 }
 
